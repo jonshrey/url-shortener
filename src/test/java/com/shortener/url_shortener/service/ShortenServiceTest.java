@@ -35,7 +35,7 @@ class ShortenServiceTest {
     @Test
     void shouldShortenValidUrlWithAutoCode() {
         String longUrl = "https://example.com";
-        when(repo.findByLongUrl(longUrl)).thenReturn(Optional.empty());
+        when(repo.findByOriginalUrl(longUrl)).thenReturn(Optional.empty());
         when(repo.existsById("abc12345")).thenReturn(false);
         when(repo.save(any(Url.class))).thenAnswer(inv -> inv.getArgument(0));
 
@@ -53,7 +53,7 @@ class ShortenServiceTest {
     void shouldReturnExistingCodeForDuplicateUrl() {
         String longUrl = "https://example.com";
         Url existing = new Url("existing", longUrl, false);
-        when(repo.findByLongUrl(longUrl)).thenReturn(Optional.of(existing));
+        when(repo.findByOriginalUrl(longUrl)).thenReturn(Optional.of(existing));
 
         String code = service.shorten(longUrl, null);
         assertThat(code).isEqualTo("existing");
@@ -98,7 +98,7 @@ class ShortenServiceTest {
     @Test
     void shouldRetryOnCodeCollision() {
         String longUrl = "https://example.com";
-        when(repo.findByLongUrl(longUrl)).thenReturn(Optional.empty());
+        when(repo.findByOriginalUrl(longUrl)).thenReturn(Optional.empty());
         when(repo.existsById(anyString())).thenReturn(false);
         when(repo.save(any(Url.class))).thenAnswer(inv -> inv.getArgument(0));
 

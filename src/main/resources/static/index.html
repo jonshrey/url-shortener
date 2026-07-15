@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>URL Shortener</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 3rem auto;
+      padding: 0 1rem;
+    }
+    h2 { text-align: center; }
+    input, button {
+      font-size: 1rem;
+      padding: 0.6rem;
+      margin: 0.5rem 0;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    button {
+      background: #0070f3;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:hover { background: #0056b3; }
+    #result {
+      margin-top: 1.5rem;
+      text-align: center;
+    }
+    a { color: #0070f3; font-size: 1.1rem; }
+    .error { color: red; }
+  </style>
+</head>
+<body>
+  <h2>URL Shortener</h2>
+  <input type="url" id="urlInput" placeholder="Enter long URL (https://...)">
+  <input type="text" id="aliasInput" placeholder="Custom alias (optional, 4-20 chars)">
+  <button onclick="shortenUrl()">Generate Short URL</button>
+  <div id="result"></div>
+
+  <script>
+    async function shortenUrl() {
+      const url = document.getElementById('urlInput').value.trim();
+      const alias = document.getElementById('aliasInput').value.trim() || null;
+      const resultDiv = document.getElementById('result');
+
+      try {
+        const res = await fetch('/shorten', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url, alias })
+        });
+        const data = await res.json();
+
+        if (res.ok) {
+          resultDiv.innerHTML = `<a href="${data.shortUrl}" target="_blank">${data.shortUrl}</a>`;
+        } else {
+          resultDiv.innerHTML = `<p class="error">${data.error}: ${data.message}</p>`;
+        }
+      } catch (err) {
+        resultDiv.innerHTML = `<p class="error">Network error. Is the server running?</p>`;
+      }
+    }
+  </script>
+</body>
+</html>
