@@ -38,7 +38,7 @@ public class ShortenService {
             return customAlias;
         }
 
-        var existing = repo.findByLongUrl(longUrl);
+        var existing = repo.findByOriginalUrl(longUrl);
         if (existing.isPresent()) {
             return existing.get().getCode();
         }

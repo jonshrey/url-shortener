@@ -1,79 +1,31 @@
 package com.shortener.url_shortener.entity;
 
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Index;
-import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "url_mappings", indexes = {
-    @Index(name = "idx_long_url", columnList = "longUrl")
+    @Index(name = "idx_original_url", columnList = "original_url")
 })
 public class Url {
-
-    public String getCode() {
-        return this.code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getOriginalUrl() {
-        return this.originalUrl;
-    }
-
-    public void setOriginalUrl(String originalUrl) {
-        this.originalUrl = originalUrl;
-    }
-
-    public boolean isCustom() {
-        return this.custom;
-    }
-
-    public boolean getCustom() {
-        return this.custom;
-    }
-
-    public void setCustom(boolean custom) {
-        this.custom = custom;
-    }
-
-    public long getClicks() {
-        return this.clicks;
-    }
-
-    public void setClicks(long clicks) {
-        this.clicks = clicks;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return this.createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
 
     @Id
     @Column(length = 20)
     private String code;
 
-    @Column(nullable = false, length = 2048)
+    @Column(name = "original_url", nullable = false, length = 2048)
     private String originalUrl;
 
-    @Column(nullable = false)
+    @Column(name = "is_custom", nullable = false)
     private boolean custom;
 
-    @Column(nullable = false)
+    @Column(name = "click_count", nullable = false)
     private long clicks;
 
-    @Column(nullable = false)
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
+    // No-arg constructor required by JPA
     public Url() {
     }
 
@@ -85,4 +37,45 @@ public class Url {
         this.createdAt = LocalDateTime.now();
     }
 
+    // --- Getters and Setters ---
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getOriginalUrl() {
+        return originalUrl;
+    }
+
+    public void setOriginalUrl(String originalUrl) {
+        this.originalUrl = originalUrl;
+    }
+
+    public boolean isCustom() {
+        return custom;
+    }
+
+    public void setCustom(boolean custom) {
+        this.custom = custom;
+    }
+
+    public long getClicks() {
+        return clicks;
+    }
+
+    public void setClicks(long clicks) {
+        this.clicks = clicks;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
 }
