@@ -43,8 +43,8 @@ public class UrlController {
     }
 
     @GetMapping("/{code}/analytics")
-    public ResponseEntity<UrlAnalyticsResponse> stats(@PathVariable String code) {
-        Url url = analyticsService.getStats(code);
+    public ResponseEntity<UrlAnalyticsResponse> analytics(@PathVariable String code) {
+        Url url = analyticsService.getAnalytics(code);
         return ResponseEntity.ok(new UrlAnalyticsResponse(
                 url.getCode(),
                 url.getOriginalUrl(),

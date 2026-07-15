@@ -14,7 +14,7 @@ public class AnalyticsService {
         this.repo = repo;
     }
 
-    public Url getStats(String code) {
+    public Url getAnalytics(String code) {
         return repo.findById(code)
                 .orElseThrow(() -> new UrlNotFoundException(code));
     }
