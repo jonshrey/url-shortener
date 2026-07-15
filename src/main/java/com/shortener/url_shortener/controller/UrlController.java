@@ -20,8 +20,8 @@ public class UrlController {
     private final AnalyticsService analyticsService;
 
     public UrlController(ShortenService shortenService,
-                         RedirectService redirectService,
-                         AnalyticsService analyticsService) {
+            RedirectService redirectService,
+            AnalyticsService analyticsService) {
         this.shortenService = shortenService;
         this.redirectService = redirectService;
         this.analyticsService = analyticsService;
@@ -34,7 +34,7 @@ public class UrlController {
         return ResponseEntity.ok(new CreateShortUrlResponse(code, shortUrl));
     }
 
-    @GetMapping("/{code}")
+    @GetMapping("/{code:[a-zA-Z0-9]{4,20}}")
     public ResponseEntity<Void> redirect(@PathVariable String code) {
         Url url = redirectService.getUrlAndIncrementClicks(code);
         return ResponseEntity.status(301)
@@ -42,7 +42,7 @@ public class UrlController {
                 .build();
     }
 
-    @GetMapping("/{code}/analytics")
+    @GetMapping("/{code:[a-zA-Z0-9]{4,20}}/analytics")
     public ResponseEntity<UrlAnalyticsResponse> analytics(@PathVariable String code) {
         Url url = analyticsService.getAnalytics(code);
         return ResponseEntity.ok(new UrlAnalyticsResponse(
@@ -50,7 +50,6 @@ public class UrlController {
                 url.getOriginalUrl(),
                 url.getClicks(),
                 url.getCreatedAt(),
-                url.isCustom()
-        ));
+                url.isCustom()));
     }
 }
