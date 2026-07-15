@@ -6,26 +6,30 @@ A simple URL shortener with analytics, built with Spring Boot, H2, and JPA.
 
 ```mermaid
 flowchart TD
-    Client[Browser / curl] -->|POST /shorten| ShortenController[UrlController.shorten()]
-    Client -->|GET /{code}| RedirectController[UrlController.redirect()]
-    Client -->|GET /{code}/stats| StatsController[UrlController.stats()]
-    Client -->|GET /| Static[Static index.html]
+    A[Client] -->|POST /shorten| B[Shorten Controller]
+    A -->|GET /:code| C[Redirect Controller]
+    A -->|GET /:code/stats| D[Stats Controller]
+    A -->|GET /| E[Static index.html]
 
-    ShortenController -->|validate & process| ShortenService[ShortenService]
-    RedirectController -->|lookup & increment| RedirectService[RedirectService]
-    StatsController -->|lookup only| AnalyticsService[AnalyticsService]
+    B -->|validate & process| F[Shorten Service]
+    C -->|lookup & increment| G[Redirect Service]
+    D -->|lookup only| H[Analytics Service]
 
-    ShortenService -->|CRUD| UrlRepository[UrlRepository]
-    RedirectService -->|CRUD| UrlRepository
-    AnalyticsService -->|CRUD| UrlRepository
+    F -->|CRUD| I[URL Repository]
+    G -->|CRUD| I
+    H -->|CRUD| I
 
-    UrlRepository -->|JPA/Hibernate| H2[(H2 In-Memory DB)]
+    I -->|JPA/Hibernate| J[(H2 In-Memory DB)]
 
-    ShortenService -->|generate code| CodeGenerator[CodeGenerator util]
-    ShortenService -->|validate input| UrlValidator[UrlValidator util]
-    RedirectService -->|throws| NotFound[UrlNotFoundException]
-    AnalyticsService -->|throws| NotFound
-    ShortenService -->|throws| AliasConflict[AliasAlreadyExistsException]
+    F -->|generate code| K[CodeGenerator]
+    F -->|validate input| L[UrlValidator]
+    G -->|throws| M[UrlNotFoundException]
+    H -->|throws| M
+    F -->|throws| N[AliasAlreadyExistsException]
+
+    O[GlobalExceptionHandler] -->|handles| M
+    O -->|handles| N
+    O -->|handles| BadRequest[IllegalArgumentException]
 ```
 
 ## Prerequisites
