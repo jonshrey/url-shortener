@@ -2,7 +2,7 @@ package com.shortener.url_shortener.service;
 
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;   // static import
+import static org.assertj.core.api.Assertions.assertThat;   
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -118,10 +118,6 @@ class ShortenServiceTest {
 
     @Test
     void shouldBuildShortUrl() {
-        // Inject a baseUrl manually for the test
-        // Since @InjectMocks won't inject the @Value field, we can either use reflection
-        // or just test the method by creating the service with the constructor.
-        // Simpler: create a test instance directly.
         service = new ShortenService(repo, "http://localhost:8080");
         assertThat(service.buildShortUrl("abc123")).isEqualTo("http://localhost:8080/abc123");
     }

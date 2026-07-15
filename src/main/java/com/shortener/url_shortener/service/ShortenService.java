@@ -15,7 +15,6 @@ public class ShortenService {
     private final UrlRepository repo;
     private final String baseUrl;
 
-    // No more CodeGenerator field – we use the static method directly
     public ShortenService(UrlRepository repo,
                           @Value("${app.base-url:http://localhost:8080}") String baseUrl) {
         this.repo = repo;
@@ -44,14 +43,13 @@ public class ShortenService {
             return existing.get().getCode();
         }
 
-        // Use static method – no injection needed
         String code;
         int attempts = 0;
         do {
             if (attempts > 10) {
                 throw new RuntimeException("Failed to generate unique code after 10 attempts");
             }
-            code = CodeGenerator.generate(8);   // static call
+            code = CodeGenerator.generate(8);   
             attempts++;
         } while (repo.existsById(code));
 
