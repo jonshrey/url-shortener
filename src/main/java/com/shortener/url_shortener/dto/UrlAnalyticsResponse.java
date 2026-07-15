@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 public record UrlAnalyticsResponse(
     String code,
-    String longUrl,
+    String originalUrl,
     long clicks,
     LocalDateTime createdAt,
     boolean custom

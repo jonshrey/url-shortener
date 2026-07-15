@@ -2,7 +2,9 @@ package com.shortener.url_shortener.controller;
 
 import com.shortener.url_shortener.dto.CreateShortUrlRequest;
 import com.shortener.url_shortener.dto.CreateShortUrlResponse;
+import com.shortener.url_shortener.dto.UrlAnalyticsResponse;
 import com.shortener.url_shortener.entity.Url;
+import com.shortener.url_shortener.service.AnalyticsService;
 import com.shortener.url_shortener.service.RedirectService;
 import com.shortener.url_shortener.service.ShortenService;
 import org.springframework.http.ResponseEntity;
@@ -15,10 +17,14 @@ public class UrlController {
 
     private final ShortenService shortenService;
     private final RedirectService redirectService;
+    private final AnalyticsService analyticsService;
 
-    public UrlController(ShortenService shortenService, RedirectService redirectService) {
+    public UrlController(ShortenService shortenService,
+                         RedirectService redirectService,
+                         AnalyticsService analyticsService) {
         this.shortenService = shortenService;
         this.redirectService = redirectService;
+        this.analyticsService = analyticsService;
     }
 
     @PostMapping("/shorten")
@@ -34,5 +40,17 @@ public class UrlController {
         return ResponseEntity.status(301)
                 .location(URI.create(url.getOriginalUrl()))
                 .build();
+    }
+
+    @GetMapping("/{code}/analytics")
+    public ResponseEntity<UrlAnalyticsResponse> stats(@PathVariable String code) {
+        Url url = analyticsService.getStats(code);
+        return ResponseEntity.ok(new UrlAnalyticsResponse(
+                url.getCode(),
+                url.getOriginalUrl(),
+                url.getClicks(),
+                url.getCreatedAt(),
+                url.isCustom()
+        ));
     }
 }
